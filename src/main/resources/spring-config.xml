@@ -8,14 +8,27 @@
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
 
        default-autowire="byName">
+    <bean id="monitor" class="com.aop.Monitor"/>
+    <bean id="monitor2" class="com.aop.Monitor2"/>
+    <bean id="cacheManager" class="com.cache.CacheManager"/>
+    <bean id = "cThread" class="com.cache.CThread"/>
+    <!--aop 切面编程-->
     <context:annotation-config />
-    <context:component-scan base-package="com.service"/>
+    <context:component-scan base-package="com.cache"/>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!--aop配置-->
     <aop:config>
+        <!--切点（被代理者）-->
         <aop:pointcut id="servicePointcut" expression="execution(* com.service..*.*(..))"/>
+    </aop:config>
+
+    <aop:config>
+        <!--切入的方法-->
         <aop:aspect ref="monitor">
             <aop:around method="paramAround" pointcut-ref="servicePointcut"/>
         </aop:aspect>
+        <aop:aspect ref = "monitor2">
+            <aop:around method="paramAround" pointcut-ref="servicePointcut"/>
+        </aop:aspect>
     </aop:config>
-    <bean id="monitor" class="com.aop.Monitor"/>
 </beans>

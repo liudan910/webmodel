@@ -1,5 +1,6 @@
 package com.test;
 
+import com.service.Birthday;
 import com.service.Chinese;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -10,7 +11,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class TestAop {
     public static void main(String[] args){
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
-       Chinese p = ctx.getBean("chinese",Chinese.class);
-       p.sayHello("tt");
+        Chinese p = ctx.getBean("chinese",Chinese.class);
+        Birthday birthday = new Birthday(1992,12,5);
+        p.sayHello("李三",birthday);
     }
 }
