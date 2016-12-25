@@ -24,7 +24,7 @@ public class TCacheManage {
     public String get(String key){
         return cache.getIfPresent(key);
     }
-    public void set(String key,String value){
+    public synchronized void set(String key,String value){
 
         String keyC = cache.getIfPresent(key);
         Integer v ;
@@ -35,7 +35,7 @@ public class TCacheManage {
             v = Integer.parseInt(keyC)+1;
             out.println(key+ " "+v);
         }
-        out.println(cache.asMap());
+        //out.println(cache.asMap());
         cache.put(key,v.toString());
     }
     public ConcurrentMap<String, String> getAll(){
