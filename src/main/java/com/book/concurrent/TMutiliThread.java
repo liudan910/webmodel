@@ -61,18 +61,6 @@ public class TMutiliThread {
 
         }
     }
-/**
- * 1.Spring配置的bean 默认为单例 即只会生成一个实例。
- *    故：
- *    在Web程序的Spring上下文中，service是不能有可变状态的。
- *    而本地缓存是可以有可变状态的。
- *    exp:
- *    CacheManager实例中持有一个Map实例称map
- *    在CacheManager.set（）方法中，将数据保存在map    -------->这样CacheManager的状态就发生了改变。
- *
- *    另：
- *    实例状态：即该实例的所有属性组成的状态。
- */
 
 
 
