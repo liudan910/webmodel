@@ -1,0 +1,6 @@
+1.threadLocal在web请求中作用：保存用户信息
+    在代码中需要用到当前登录用户的信息，又不方便把保存用户信息的session传来传去，此时可用threadLocal
+2.设计线程的数量
+  在不涉及I/O操作或共享数据访问的计算问题中， 当线程数量为CPU数量 或 CPU数量+1时将获得最优先的吞吐量。
+  更多的线程并不会带来任何的帮助，甚至在某种程度上会降低性能，因为多个线程将会在CPU和内存等资源上发生竞争。
+  CPU数量计算方式： int count = Runtime.getRuntime().availableProcessors();

@@ -1,0 +1,10 @@
+1.
+  查看本项目Client 与Server
+  研究包 com.jd.sirector
+  对SOA改写Sirector。
+
+2.研究SOA中threadLocal的应用
+   使用threadLocal保存用户信息/此次请求相关信息：小号功能，埋点上报……
+3.研究SOA请求中的filter功能
+
+4.研究属性加载过程，如配置文件中的内容是如何从configCenter获取

@@ -1,0 +1,78 @@
+/**
+    埋点上报功能：
+   1 任务类SendThread 实现Runnnable        ->消费者
+   2 系统初始化：
+     新建大小为16的SendThread数组，数组元素并初始化即： threads[i] = new SendThread(queueSize);
+     为每个任务新建线程并启动： Thread thread = new Thread(threads[i]);
+                                thread.start();
+
+   3.生产者实现
+    commit(topic,pin,key ):
+        包装消息 Message = new Message(topic,pin,key);
+    一：开关关闭：实现发送消息Runnable,将该任务提交到现有线程池：
+            threadPoolExecutor.execute(new Runnable(){
+                    doSend(message);
+           }
+         );
+        doSend(Message message){            发送消息
+            List<Message> messageL = new ArrayList<Message>();
+           messageL.add(message);
+          doSend(messageL);           //新建消息列表，放入当前消息， 该列表只有一个消息，调用批量发送消息方法
+       }
+       doSend(List<Message> messages){   批量发送消息
+            uploadDataProducer.send(messages, timeout);  调用上游uploadProducer,对上游来说，我们是生产者
+      }
+   二，开关打开
+       使用原子变量来确定要使用的自定义任务位置：                      维护任务的数量
+           t =  threads[Math.abs(current.getAndIncrement() % threadSize)];
+       将任务提交给消费者: t.commit(message);
+
+ 3.SendThread实现：
+     持有：消息队列messages类型:LinkedBlockingQueue
+     字段 runnable类型：boolean 用于优雅地中止线程
+     run():
+         while(runnable){
+         判断messages长度，是否超过20条，若不超过则睡眠
+         否则messages中抓取20条数据，放入新建List<Message> messageList中并发送：
+         messages.drain(messageList,20);
+     }
+    commit(Message message){
+    将message放入消息列表中。
+   }
+ 总结 数据上报功能：
+   一次提交一条消息： 已有线程池+每个线程实现提交方法
+    批量提交： 生产者-消费者模式
+         生产者每次要取模散列方式确定消费者，并将消息交给该消费者
+         消费者将生产者生产的消息放在线程内部的消息队列中，
+              在run方法中while循环中：
+                判断 消息队列中的消息数是否满足n个，若满足，一次取n个，然后上报。
+ 总结 ：典型生产者-消费者模式 与 数据上报功能中的对比
+ 对比一：生产者与消费者分离
+   方式一： 典型的生产者-消费者模式 都是共享消息队列，实现生产 与 消费分离
+   方式二： 数据上报功能中的 生产者-消费者模式，生产者直接将消息交给消费者，消费者维护私有的消息队列，
+    这样设计的原因是：
+        生产者只有一个（每个用户请求算作一条生产者的消息），消费者N个。
+       如果采用共享消息队列（方式一），需要确定需要几个共享队列，
+       使用N个的话，每个消费者维护一个队列，那么 生产者需要确定将消息放入哪一个队列中。
+     这与：生产者将消息交给N个消费者中的一个，每个消费者维护私有的消息队列（方式二）
+     效果是一致的。
+     示图区别区别是：
+             ----- 消息队列1 -----消费者1
+      生产者 ----  消息队列2 ---- 消费者2
+             ----  消息队列3 -----消费者3
+
+                ---消费者1 （消息队列1 )
+      生产者    ---消费者2 （消息队列1 )
+                ---消费者3 （消息队列1 )
+     两种 实现效果一致，前者实现生产者-消费分离，而后者更易于维护消息队列。
+
+ 对比二：
+   方式一：典型的生产者-消费者模式中，所有消费者共享一个消息队列
+                                ---- 消费者1
+         生产者 ----  消息队列  ---- 消费者2
+                                ---- 消费者3
+   数据上报中使用 每个消费者一个消息队列原因 估计：
+        SOA 生产者生产速度远远大于消费者消费速度。
+        故，若消费者使用同一个消息队列会降低并发性能。
+        ——>  解决生产速度与 消费速度相差较大的问题。
+ */
