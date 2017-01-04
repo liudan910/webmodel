@@ -8,32 +8,5 @@
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
 
        default-autowire="byName">
-    <bean id="monitor" class="com.aop.Monitor"/>
-    <bean id="monitor2" class="com.aop.Monitor2"/>
-    <bean id="cacheManager" class="com.cache.CacheManager"/>
-    <!--aop 切面编程-->
-    <context:annotation-config />
-    <context:component-scan base-package="com.cache,com.service,com.book.concurrent,com.concurrent.test1"/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <!--aop配置-->
-    <aop:config>
-        <!--切点（被代理者）-->
-        <aop:pointcut id="servicePointcut" expression="execution(* com.aop.aop_service..*.*(..))"/>
-    </aop:config>
 
-    <aop:config>
-        <!--切入的方法-->
-        <aop:aspect ref="monitor">
-            <aop:around method="paramAround" pointcut-ref="servicePointcut"/>
-        </aop:aspect>
-        <aop:aspect ref = "monitor2">
-            <aop:around method="paramAround" pointcut-ref="servicePointcut"/>
-        </aop:aspect>
-    </aop:config>
-    <bean id="eventExecutor" class = "com.concurrent.test1.EventExecutor">
-        <constructor-arg index = "0" value="90"/>
-        <constructor-arg index = "1" value="240"/>
-        <constructor-arg index = "2" value="5"/>
-        <constructor-arg index = "3" value="500"/>
-    </bean>
 </beans>
