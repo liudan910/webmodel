@@ -1,16 +1,67 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-<web-app>
-  <display-name>Archetype Created Web Application</display-name>
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext.xml</param-value>
-    </context-param>
+    <display-name>Archetype Created Web Application</display-name>
+    <!--过滤器 -->
+    <filter>
+        <description></description>
+        <display-name>RequestDispatcherFilter</display-name>
+        <filter-name>RequestDispatcherFilter</filter-name>
+        <filter-class>com.web.filter.RequestDistpatcherFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestDispatcherFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>ParameterFilter</filter-name>
+        <filter-class>com.web.filter.ParameterFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ParameterFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>UploadDataFilter</filter-name>
+        <filter-class>com.web.filter.UploadDataFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UploadDataFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>LimitFilter</filter-name>
+        <filter-class>com.web.filter.LimitFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LimitFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthCodeFilter</filter-name>
+        <filter-class>com.web.filter.AuthCodeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthCodeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--ContextLoaderListener类：在启动web容器时，自动装配spring-config.xml文件-->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-config.xml</param-value>
+    </context-param>
+
+    <!--请求转发-->
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
