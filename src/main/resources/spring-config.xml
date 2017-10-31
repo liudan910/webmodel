@@ -11,11 +11,4 @@
     <context:annotation-config />
     <context:component-scan base-package="com.service"/>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-    <aop:config>
-        <aop:pointcut id="servicePointcut" expression="execution(* com.service..*.*(..))"/>
-        <aop:aspect ref="monitor">
-            <aop:around method="paramAround" pointcut-ref="servicePointcut"/>
-        </aop:aspect>
-    </aop:config>
-    <bean id="monitor" class="com.aop.Monitor"/>
 </beans>
