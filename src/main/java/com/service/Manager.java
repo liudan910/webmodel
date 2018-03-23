@@ -12,6 +12,21 @@ import java.util.*;
 public class Manager {
     List<Consumer> consumerList = new ArrayList<Consumer>();
     static final int MAX_LENGTH = 50;
+    /*
+    使用final修饰入参，入参的引用不可变，其属性可变。
+    public void transport(final Message message){
+        message.setLength(100); //通过
+        message = new Message(); //编译报错，入参使用final修饰时，引用不可变。
+        if(message != null){
+            Iterator<Consumer> it = consumerList.iterator();
+            int id = 0 ;
+            while (it.hasNext()){
+                Consumer next = it.next();
+                next.consume(id++,message);
+            }
+        }
+    }
+    */
     public void transport(Message message){
         if(message != null){
             Iterator<Consumer> it = consumerList.iterator();
